@@ -23,8 +23,9 @@ router.delete('/users/:id', async (req, res) => {
     const u = await query('SELECT role FROM users WHERE id=$1', [id]);
     if (!u.rows.length) return res.status(404).json({ error: 'Usuario no encontrado' });
     if (u.rows[0].role === 'admin') return res.status(400).json({ error: 'No puedes eliminar a otro administrador' });
-    await query('DELETE FROM notifications WHERE user_id=$1', [id]);
-    await query('DELETE FROM users WHERE id=$1', [id]);
+await query('DELETE FROM notifications WHERE user_id=$1', [id]);
+await query('DELETE FROM reservations WHERE user_id=$1', [id]);
+await query('DELETE FROM users WHERE id=$1', [id]);
     res.json({ ok: true });
   } catch { res.status(500).json({ error: 'Error al eliminar usuario' }); }
 });
